@@ -59,3 +59,59 @@ diff-%:
 
 except_first = $(wordlist 2,$(words $1),$1)
 
+
+# The rules for making output files.
+
+define fout_rule
+%$1.out: %.exe
+	> $$@ < $$(call get_fin,$$*,$1) ./$$<
+%$1.out: %.class
+	> $$@ < $$(call get_fin,$$*,$1) java $$*
+endef
+
+# The ways to generate an output file.
+# $1: the version suffix (with `#') which can be empty.
+
+# The file extension `.exe' is needed to generate the .out file
+# via 2 implicit rules from .c/.cpp source code.
+
+get_fin = io/$(firstword $(subst _, ,$1))$2.in
+
+# $1: <problem>_<author>, $2: <#ver>, return the corresponding input file.
+
+$(if $(VER),                            \
+  $(foreach ver,$(VER),                 \
+    $(eval $(call fout_rule,\#$(ver)))),\
+  $(eval $(call fout_rule,)))
+
+# Generate the `fout_rule's for each version of i/o.
+
+
+# The rules for making executables.
+
+vpath %.c code
+vpath %.cpp code
+vpath %.java code
+
+.SECONDARY:
+
+# Avoid the intermediate files being killed after making.
+
+%.exe: %.c
+	$(LINK.c) $^ $(LOADLIBES) $(LDLIBS) -o $@
+
+%.exe: %.cpp
+	$(LINK.cpp) $^ $(LOADLIBES) $(LDLIBS) -o $@
+
+# These 2 commands are the same as the built-in rules from `make -p'.
+
+%.class: %.java
+	javac -d . $<
+
+# There is no built-in rule for java source codes so we write our own.
+# Use `-d .' to put the .class at current directory not at code/.
+
+
+clean:
+	$(RM) *.out *.exe *.class
+
