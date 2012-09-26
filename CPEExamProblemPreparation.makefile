@@ -35,10 +35,16 @@ endef
 # diff-<problem><ver>: io/<problem><ver>.out \
 #   <problem>_<author><ver>.out... [tk/<problem><ver>.out]
 
+vpath %.in io
+vpath %.out io
+
 define check_rule
 check-all: diff-$1$2
-diff-$1$2: io/$1$2.out $(foreach i,$3, $1_$i$2.out) $$(wildcard tk/$1$2.out)
+diff-$1$2: $1$2.out $(foreach i,$3,$1_$i$2.out) $$(wildcard tk/$1$2.out)
+$(foreach i,$3,$1_$i$2.out): $1$2.in
 endef
+
+# $1: <problem>, $2: <#ver>, $3: <author-list>
 
 # The output file of toolkit presents, only when the file exist.
 
@@ -64,9 +70,9 @@ except_first = $(wordlist 2,$(words $1),$1)
 
 define fout_rule
 %$1.out: %.exe
-	> $$@ < $$(call get_fin,$$*,$1) ./$$<
+	> $$@ < $$(word 2,$$^) ./$$<
 %$1.out: %.class
-	> $$@ < $$(call get_fin,$$*,$1) java $$*
+	> $$@ < $$(word 2,$$^) java $$*
 endef
 
 # The ways to generate an output file.
@@ -74,10 +80,6 @@ endef
 
 # The file extension `.exe' is needed to generate the .out file
 # via 2 implicit rules from .c/.cpp source code.
-
-get_fin = io/$(firstword $(subst _, ,$1))$2.in
-
-# $1: <problem>_<author>, $2: <#ver>, return the corresponding input file.
 
 $(if $(VER),                            \
   $(foreach ver,$(VER),                 \
