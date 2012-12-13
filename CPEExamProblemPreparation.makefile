@@ -10,8 +10,8 @@ VER = a b
 
 # The suffixes indicating different versions of i/o files.
 # There are usually 2 versions (a and b), and more versions are also allowed.
-# A empty $(VER) means there is only one version
-# (and we don't have to add any suffix to i/o files in this case).
+# An empty $(VER) means there is only one version
+# (in this case, we don't have to add any suffix to i/o files).
 
 
 define \n
@@ -22,7 +22,8 @@ endef
 # The newline character.
 
 
-# The `auto_detect' command.
+# The `auto_detect' command
+# ---
 # Instead of specifying the `check' function call one by one,
 # `auto_detect' command find all the problems and the corresponding authors
 # of each problem, then call the `check' function automatically.
@@ -35,7 +36,8 @@ auto_detect = $(foreach problem,$(ad_problems),\
   $(call check,$(problem),$(call ad_authors,$(problem))))
 
 
-# The `check' function.
+# The `check' function
+# ---
 # For each version of i/o of one problem,
 # check whether all the output files are the same.
 
@@ -51,6 +53,8 @@ auto_detect = $(foreach problem,$(ad_problems),\
 
 vpath %.in io
 vpath %.out io
+
+# Where to find the i/o files.
 
 define check_rule
 check-all: diff-$1$2
@@ -71,6 +75,8 @@ check = $(if $(VER),                             \
   $(eval $(call check_rule,$1,,$2)))
 
 
+# The `diff-%' rule
+# ---
 # Compare the first file (in prerequisites list) with the others by `diff'.
 
 diff-%:
@@ -80,7 +86,8 @@ diff-%:
 except_first = $(wordlist 2,$(words $1),$1)
 
 
-# The rules for making output files.
+# The rules of generating .out files
+# ---
 
 define fout_rule
 %$1.out: %.exe
@@ -89,7 +96,7 @@ define fout_rule
 	> $$@ < $$(word 2,$$^) java $$*
 endef
 
-# The ways to generate an output file.
+# There are 2 ways to generate an output file.
 # $1: the version suffix (with `#') which can be empty.
 
 # The file extension `.exe' is needed to generate the .out file
@@ -103,11 +110,14 @@ $(if $(VER),                            \
 # Generate the `fout_rule's for each version of i/o.
 
 
-# The rules for making executables.
+# The rules of generating .exe and .class
+# ---
 
 vpath %.c code
 vpath %.cpp code
 vpath %.java code
+
+# Where to find the source codes.
 
 .SECONDARY:
 
@@ -127,6 +137,9 @@ vpath %.java code
 # There is no built-in rule for java source codes so we write our own.
 # Use `-d .' to put the .class at current directory not at code/.
 
+
+# clean
+# ---
 
 clean:
 	$(RM) *.out *.exe *.class
