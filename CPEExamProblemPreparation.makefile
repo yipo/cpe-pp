@@ -34,6 +34,7 @@ endef
 # check-all: diff-<problem><ver>
 # diff-<problem><ver>: io/<problem><ver>.out \
 #   <problem>_<author><ver>.out... [tk/<problem><ver>.out]
+# <problem>_<author><ver>.out...: <problem><ver>.in
 
 vpath %.in io
 vpath %.out io
