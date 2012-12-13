@@ -22,6 +22,19 @@ endef
 # The newline character.
 
 
+# The `auto_detect' command.
+# Instead of specifying the `check' function call one by one,
+# `auto_detect' command find all the problems and the corresponding authors
+# of each problem, then call the `check' function automatically.
+
+ad_codes = $(notdir $(basename $(wildcard $(addprefix code/$1*.,c cpp java))))
+ad_problems = $(sort $(foreach i,$(ad_codes),$(firstword $(subst _, ,$i))))
+ad_authors = $(foreach i,$(call ad_codes,$1),$(lastword $(subst _, ,$i)))
+
+auto_detect = $(foreach problem,$(ad_problems),\
+  $(call check,$(problem),$(call ad_authors,$(problem))))
+
+
 # The `check' function.
 # For each version of i/o of one problem,
 # check whether all the output files are the same.

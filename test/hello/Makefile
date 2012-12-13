@@ -1,5 +1,5 @@
 
 include ../../CPEExamProblemPreparation.makefile
 
-$(call check,hello,andy bob cathy)
+$(auto_detect)
 
