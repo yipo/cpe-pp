@@ -22,6 +22,17 @@ endef
 # The newline character.
 
 
+DIFF ?= diff
+
+ifeq ($(findstring Win,$(OS)),)
+  fix_path = $1
+else
+  fix_path = $(subst /,\,$1)
+endif
+
+# For Windows compatibility.
+
+
 # The `auto_detect' command
 # ---
 # Instead of specifying the `check' function call one by one,
@@ -81,7 +92,8 @@ check = $(if $(VER),                             \
 
 diff-%:
 	@echo [$*]
-	$(foreach i,$(call except_first,$^),-diff $(firstword $^) $(i)$(\n))
+	$(foreach i,$(call except_first,$^),\
+		-$(DIFF) $(call fix_path,$(firstword $^) $i)$(\n))
 
 except_first = $(wordlist 2,$(words $1),$1)
 
@@ -91,7 +103,7 @@ except_first = $(wordlist 2,$(words $1),$1)
 
 define fout_rule
 %$1.out: %.exe
-	> $$@ < $$(word 2,$$^) ./$$<
+	> $$@ < $$(word 2,$$^) $(call fix_path,./$$<)
 %$1.out: %.class
 	> $$@ < $$(word 2,$$^) java $$*
 endef
