@@ -1,5 +1,5 @@
 
-include ../../CPEExamProblemPreparation.makefile
+include ../../CPEPP.mak
 
 $(call check,hello,andy bob)
 
