@@ -6,7 +6,7 @@ check-all:
 # Use the `check' function to add tasks in.
 
 
-VER = a b
+VER ?= a b
 
 # The suffixes indicating different versions of i/o files.
 # There are usually 2 versions (a and b), and more versions are also allowed.
