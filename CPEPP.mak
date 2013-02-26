@@ -1,3 +1,8 @@
+# CPE Problem Preparation v1.0
+# GitHub: https://github.com/yipo/cpe-pp
+# Author: Yi-Pu Guo (YiPo)
+# License: MIT
+
 
 check-all:
 
