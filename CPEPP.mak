@@ -108,7 +108,7 @@ except_first = $(wordlist 2,$(words $1),$1)
 
 define fout_rule
 %$1.out: %.exe
-	> $$@ < $$(word 2,$$^) $(call fix_path,./$$<)
+	> $$@ < $$(word 2,$$^) $(call fix_path,./"$$<")
 %$1.out: %.class
 	> $$@ < $$(word 2,$$^) java $$*
 endef
