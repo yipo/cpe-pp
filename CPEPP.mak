@@ -149,7 +149,7 @@ vpath %.java code
 # These 2 commands are the same as the built-in rules from `make -p'.
 
 %.class: %.java
-	javac -d . $<
+	javac -encoding utf-8 -d . $<
 
 # There is no built-in rule for java source codes so we write our own.
 # Use `-d .' to put the .class at current directory not at code/.
