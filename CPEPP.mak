@@ -74,7 +74,7 @@ vpath %.out io
 
 define check_rule
 check-all: diff-$1$2
-diff-$1$2: $1$2.out $(foreach i,$3,$1_$i$2.out) $$(wildcard tk/$1$2.out)
+diff-$1$2: $1$2.out $(foreach i,$3,$1_$i$2.out) $$(wildcard tk/$1$2.*)
 $(foreach i,$3,$1_$i$2.out): $1$2.in
 endef
 
@@ -84,6 +84,10 @@ endef
 
 # Using 2 dollar signs before the `wildcard' function
 # to avoid the file name becoming a comment.
+
+# A `*' is required in the argument of wildcard function on Windows.
+# Since, any filename extension is OK for output files of toolkit now.
+# Using .out or .txt will be fine.
 
 check = $(if $(VER),                             \
   $(foreach ver,$(VER),                          \
